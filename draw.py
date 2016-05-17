@@ -26,10 +26,29 @@ def draw_polygons( points, screen, color ):
                        points[p+2][0], points[p+2][1], color )
             draw_line( screen, points[p+2][0], points[p+2][1],
                        points[p][0], points[p][1], color )
+            calcscanline(points[p][0], points[p][1],points[p+1][0], points[p+1][1],points[p+2][0], points[p+2][1])
         p+= 3
 
-
-
+def calcscanline(x1,y1,x2,y2,x3,y3):
+    p=[[x1,y1],[x2,y2],[x3,y3]]
+    for x in range(3):
+        if p[x][1] > p[0][1]:
+             temp = p[0]
+             p[0][0] = p[x][0]
+             p[0][1] = p[x][1]
+             p[x] = temp
+    for x in range(2):
+        if p[x+1][1] > p[0][1]:
+             temp = p[0]
+             p[0][0] = p[x+1][0]
+             p[0][1] = p[x+1][1]
+             p[x+1] = temp
+    #BM
+    tau1 = (p[1][0] - p[2][0]) / float(p[1][1] - p[2][1])
+    while y <= y1:
+            plot(screen, color, x, y)
+             
+             
 def add_box( points, x, y, z, width, height, depth ):
     x1 = x + width
     y1 = y - height
