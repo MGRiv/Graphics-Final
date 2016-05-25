@@ -53,13 +53,13 @@ def calcscanline(screen,x1,y1,x2,y2,x3,y3,color):
     lx = p[2][0]
     ry = p[2][1]
     rx = p[2][0]
-    while ry <= y1:
+    while ry <= p[1][1]:
         draw_line(screen,int(lx),int(ly),int(rx),int(ry),color)
         ry += 1
         ly += 1
         rx += tau1
         lx += tau3
-    while ry <= y1:
+    while ry > p[1][1] && ry < p[0][1]:
         draw_line(screen,int(lx),int(ly),int(rx),int(ry),color)
         ry += 1
         ly += 1
