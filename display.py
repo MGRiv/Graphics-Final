@@ -20,12 +20,22 @@ def new_screen( width = XRES, height = YRES ):
             screen[y].append( DEFAULT_COLOR[:] )
     return screen
 
-def plot( screen, color, x, y ):
+def new_zb(width = XRES, height = YRES):
+    zb = []
+    for y in range( height ):
+        row = []
+        zb.append( row )
+        for x in range( width ):
+            zb[y].append( DEFAULT_COLOR[:] )
+    return zb
+
+def plot( screen, zb, color, x, y, z ):
     x = int(x)
     y = int(y)
     newy = YRES - 1 - y
-    if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES ):
+    if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES  and z > zb[x][newy]):
         screen[x][newy] = color[:]
+        zb[x][newy] = z
 
 def clear_screen( screen ):
     for y in range( len(screen) ):

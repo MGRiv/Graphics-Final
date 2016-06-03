@@ -143,7 +143,7 @@ def run(filename):
         
     stack = [ tmp ]
     screen = new_screen()    
-    
+    zb = new_zb()
     TEMP = first_pass(commands)
     basename = TEMP[1]
     frames = TEMP[0]
@@ -169,31 +169,31 @@ def run(filename):
                 m = []
                 add_sphere(m, command[1], command[2], command[3], command[4], 5)
                 matrix_mult(stack[-1], m)
-                draw_polygons( m, screen, color )
+                draw_polygons( m, screen, zb, color )
                 
             elif command[0] == "torus":
                 m = []
                 add_torus(m, command[1], command[2], command[3], command[4], command[5], 5)
                 matrix_mult(stack[-1], m)
-                draw_polygons( m, screen, color )
+                draw_polygons( m, screen, zb, color )
                 
             elif command[0] == "box":                
                 m = []
                 add_box(m, *command[1:])
                 matrix_mult(stack[-1], m)
-                draw_polygons( m, screen, color )
+                draw_polygons( m, screen, zb, color )
                 
             elif command[0] == "line":
                 m = []
                 add_edge(m, *command[1:])
                 matrix_mult(stack[-1], m)
-                draw_lines( m, screen, color )
+                draw_lines( m, screen, zb, color )
                 
             elif command[0] == "bezier":
                 m = []
                 add_curve(m, command[1], command[2], command[3], command[4], command[5], command[6], command[7], command[8], .05, 'bezier')
                 matrix_mult(stack[-1], m)
-                draw_lines( m, screen, color )
+                draw_lines( m, screen, zb, color )
                 
             elif command[0] == "hermite":
                 m = []
@@ -205,7 +205,7 @@ def run(filename):
                 m = []
                 add_circle(m, command[1], command[2], command[3], command[4], .05)
                 matrix_mult(stack[-1], m)
-                draw_lines( m, screen, color )
+                draw_lines( m, screen, zb, color )
                 
             elif command[0] == "move":                
                 if command[4] == None:
@@ -271,5 +271,6 @@ def run(filename):
         tmp = new_matrix()
         ident( tmp )
         stack = [ tmp ]
+        zb = new_zb()
         screen = new_screen()
         cframe += 1
