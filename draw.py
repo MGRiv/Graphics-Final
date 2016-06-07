@@ -10,7 +10,7 @@ def add_polygon( points, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point( points, x1, y1, z1 )
     add_point( points, x2, y2, z2 )
     
-def draw_polygons( points, screen, color ):
+def draw_polygons( points, screen, zbuffer, color ):
 
     if len(points) < 3:
         print 'Need at least 3 points to draw a polygon!'
@@ -20,16 +20,16 @@ def draw_polygons( points, screen, color ):
     while p < len( points ) - 2:
 
         if calculate_dot( points, p ) < 0:
-            draw_line( screen, points[p][0], points[p][1],
+            draw_line( screen, zb, points[p][0], points[p][1],
                        points[p+1][0], points[p+1][1], color )
-            draw_line( screen, points[p+1][0], points[p+1][1],
+            draw_line( screen, zb, points[p+1][0], points[p+1][1],
                        points[p+2][0], points[p+2][1], color )
-            draw_line( screen, points[p+2][0], points[p+2][1],
+            draw_line( screen, zb, points[p+2][0], points[p+2][1],
                        points[p][0], points[p][1], color )
-            calcscanline(screen,points[p][0], points[p][1],points[p+1][0], points[p+1][1],points[p+2][0], points[p+2][1],color)
+            calcscanline(screen,zb,points[p][0], points[p][1],points[p+1][0], points[p+1][1],points[p+2][0], points[p+2][1],color)
         p+= 3
 
-def calcscanline(screen,x1,y1,x2,y2,x3,y3,color):
+def calcscanline(screen,zb,x1,y1,x2,y2,x3,y3,color):
     p=[[x1,y1],[x2,y2],[x3,y3]]
     for x in range(3):
         if p[x][1] > p[0][1]:
@@ -310,13 +310,13 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
         y0 = y
         t+= step
 
-def draw_lines( matrix, screen, color ):
+def draw_lines( matrix, screen, zb, color ):
     if len( matrix ) < 2:
         print "Need at least 2 points to draw a line"
         
     p = 0
     while p < len( matrix ) - 1:
-        draw_line( screen, matrix[p][0], matrix[p][1],
+        draw_line( screen,zb, matrix[p][0], matrix[p][1],
                    matrix[p+1][0], matrix[p+1][1], color )
         p+= 2
 
@@ -328,7 +328,7 @@ def add_point( matrix, x, y, z=0 ):
     matrix.append( [x, y, z, 1] )
 
 
-def draw_line( screen, x0, y0, x1, y1, color ):
+def draw_line( screen, zb, x0, y0, x1, y1, color ):
     dx = x1 - x0
     dy = y1 - y0
     if dx + dy < 0:

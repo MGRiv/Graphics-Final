@@ -199,7 +199,7 @@ def run(filename):
                 m = []
                 add_curve(m, command[1], command[2], command[3], command[4], command[5], command[6], command[7], command[8], .05, 'hermite')
                 matrix_mult(stack[-1], m)
-                draw_lines( m, screen, color )
+                draw_lines( m, screen, zb, color )
                 
             elif command[0] == "circle":
                 m = []
