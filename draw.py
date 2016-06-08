@@ -20,16 +20,16 @@ def draw_polygons( points, screen, zbuffer, color ):
     while p < len( points ) - 2:
 
         if calculate_dot( points, p ) < 0:
-            draw_line( screen, zb, points[p][0], points[p][1],
-                       points[p+1][0], points[p+1][1], color )
-            draw_line( screen, zb, points[p+1][0], points[p+1][1],
-                       points[p+2][0], points[p+2][1], color )
-            draw_line( screen, zb, points[p+2][0], points[p+2][1],
-                       points[p][0], points[p][1], color )
+            draw_line( screen, zb, points[p][0], points[p][1], points[p][2],
+                       points[p+1][0], points[p+1][1], points[p+1][2], color )
+            draw_line( screen, zb, points[p+1][0], points[p+1][1], points[p+1][2],
+                       points[p+2][0], points[p+2][1], points[p+2][2], color )
+            draw_line( screen, zb, points[p+2][0], points[p+2][1], points[p+2][2],
+                       points[p][0], points[p][1], points[p][2], color )
             calcscanline(screen,zb,points[p][0], points[p][1],points[p+1][0], points[p+1][1],points[p+2][0], points[p+2][1],color)
         p+= 3
 
-def calcscanline(screen,zb,x1,y1,x2,y2,x3,y3,color):
+def calcscanline(screen,zb,x1,y1,z1,x2,y2,z2,x3,y3,z3,color):
     p=[[x1,y1],[x2,y2],[x3,y3]]
     for x in range(3):
         if p[x][1] > p[0][1]:
@@ -54,7 +54,7 @@ def calcscanline(screen,zb,x1,y1,x2,y2,x3,y3,color):
     ry = p[2][1]
     rx = p[2][0]
     while ry <= p[1][1]:
-        draw_line(screen,int(lx),int(ly),int(rx),int(ry),color)
+        draw_line(screen,zb,int(lx),int(ly),int(rx),int(ry),color)
         ry += 1
         ly += 1
         rx += tau1
@@ -316,8 +316,8 @@ def draw_lines( matrix, screen, zb, color ):
         
     p = 0
     while p < len( matrix ) - 1:
-        draw_line( screen,zb, matrix[p][0], matrix[p][1],
-                   matrix[p+1][0], matrix[p+1][1], color )
+        draw_line( screen,zb, matrix[p][0], matrix[p][1], matrix[p][2],
+                   matrix[p+1][0], matrix[p+1][1], matrix[p+1][2], color )
         p+= 2
 
 def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
@@ -328,9 +328,10 @@ def add_point( matrix, x, y, z=0 ):
     matrix.append( [x, y, z, 1] )
 
 
-def draw_line( screen, zb, x0, y0, x1, y1, color ):
+def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
     dx = x1 - x0
     dy = y1 - y0
+    dz = z1 - z0
     if dx + dy < 0:
         dx = 0 - dx
         dy = 0 - dy
@@ -344,8 +345,11 @@ def draw_line( screen, zb, x0, y0, x1, y1, color ):
     if dx == 0:
         y = y0
         while y <= y1:
+            z = z0
+            grad = dz / float(dy)
             plot(screen, color,  x0, y)
             y = y + 1
+            z = z + grad
     elif dy == 0:
         x = x0
         while x <= x1:
