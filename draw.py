@@ -26,7 +26,7 @@ def draw_polygons( points, screen, zbuffer, color ):
                        points[p+2][0], points[p+2][1], points[p+2][2], color )
             draw_line( screen, zb, points[p+2][0], points[p+2][1], points[p+2][2],
                        points[p][0], points[p][1], points[p][2], color )
-            calcscanline(screen,zb,points[p][0], points[p][1],points[p+1][0], points[p+1][1],points[p+2][0], points[p+2][1],color)
+            calcscanline(screen,zb,points[p][0], points[p][1], points[p][2],points[p+1][0], points[p+1][1],points[p+2][0], points[p+2][1],color)
         p+= 3
 
 def calcscanline(screen,zb,x1,y1,z1,x2,y2,z2,x3,y3,z3,color):
@@ -344,59 +344,74 @@ def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
     
     if dx == 0:
         y = y0
+        z = z0
+        grad = dz / float(dy)
         while y <= y1:
-            z = z0
-            grad = dz / float(dy)
-            plot(screen, color,  x0, y)
+            plot(screen, color,  x0, y, z)
             y = y + 1
             z = z + grad
     elif dy == 0:
         x = x0
+        z = z0
+        grad = dz / float(dy)
         while x <= x1:
-            plot(screen, color, x, y0)
+            plot(screen, color, x, y0, z)
             x = x + 1
+            z = z + grad
     elif dy < 0:
         d = 0
         x = x0
         y = y0
+        z = z0
+        grad = dz / float(dy)
         while x <= x1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y,z)
             if d > 0:
                 y = y - 1
                 d = d - dx
             x = x + 1
             d = d - dy
+            z = z + grad
     elif dx < 0:
         d = 0
         x = x0
         y = y0
+        z = z0
+        grad = dz / float(dy)
         while y <= y1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y, z)
             if d > 0:
                 x = x - 1
                 d = d - dy
             y = y + 1
             d = d - dx
+            z = z + grad
     elif dx > dy:
         d = 0
         x = x0
         y = y0
+        z = z0
+        grad = dz / float(dy)
         while x <= x1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y,z)
             if d > 0:
                 y = y + 1
                 d = d - dx
             x = x + 1
             d = d + dy
+            z = z + grad
     else:
         d = 0
         x = x0
         y = y0
+        z = z0
+        grad = dz / float(dy)
         while y <= y1:
-            plot(screen, color, x, y)
+            plot(screen, color, x, y,z)
             if d > 0:
                 x = x + 1
                 d = d - dy
             y = y + 1
             d = d + dx
+            z = z + grad
 
