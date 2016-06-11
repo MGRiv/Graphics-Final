@@ -30,19 +30,14 @@ def draw_polygons( points, screen, zbuffer, color ):
         p+= 3
 
 def calcscanline(screen,zb,x1,y1,z1,x2,y2,z2,x3,y3,z3,color):
+    
     p=[[x1,y1],[x2,y2],[x3,y3]]
-    for x in range(3):
-        if p[x][1] > p[0][1]:
-             temp = p[0]
-             p[0][0] = p[x][0]
-             p[0][1] = p[x][1]
-             p[x] = temp
-    for x in range(2):
-        if p[x+1][1] > p[0][1]:
-             temp = p[0]
-             p[0][0] = p[x+1][0]
-             p[0][1] = p[x+1][1]
-             p[x+1] = temp
+    p.sort(lambda x: -x[1])[0]
+    '''
+    p[2] is B
+    p[1] is M
+    p[0] is T
+    '''
     #BM
     tau1 = (p[1][0] - p[2][0]) / float(p[1][1] - p[2][1])
     #MT
@@ -59,7 +54,7 @@ def calcscanline(screen,zb,x1,y1,z1,x2,y2,z2,x3,y3,z3,color):
         ly += 1
         rx += tau1
         lx += tau3
-    while ry > p[1][1] && ry < p[0][1]:
+    while ry > p[1][1] and ry < p[0][1]:
         draw_line(screen,int(lx),int(ly),int(rx),int(ry),color)
         ry += 1
         ly += 1
