@@ -1,4 +1,5 @@
 from subprocess import Popen, PIPE
+from sys import maxint
 from os import remove
 
 #constants
@@ -26,7 +27,7 @@ def new_zb(width = XRES, height = YRES):
         row = []
         zb.append( row )
         for x in range( width ):
-            zb[y].append( DEFAULT_COLOR[:] )
+            zb[y].append( -maxint-1 )
     return zb
 
 def plot( screen, zb, color, x, y, z ):
