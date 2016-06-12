@@ -2,6 +2,7 @@ from display import *
 from matrix import *
 from gmath import calculate_dot
 from math import cos, sin, pi
+from random import randint
 
 MAX_STEPS = 100
 
@@ -26,7 +27,7 @@ def draw_polygons( points, screen, zb, color ):
                        points[p+2][0], points[p+2][1], points[p+2][2], color )
             draw_line( screen, zb, points[p+2][0], points[p+2][1], points[p+2][2],
                        points[p][0], points[p][1], points[p][2], color )
-            calcscanline(screen, zb, points[p][0], points[p][1], points[p][2], points[p+1][0], points[p+1][1], points[p+1][2], points[p+2][0], points[p+2][1], points[p+2][2] ,color)
+            calcscanline(screen, zb, points[p][0], points[p][1], points[p][2], points[p+1][0], points[p+1][1], points[p+1][2], points[p+2][0], points[p+2][1], points[p+2][2] , [randint(0,255),randint(0,255),randint(0,255)])
         p+= 3
 
 def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
