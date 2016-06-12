@@ -77,6 +77,7 @@ framearraydict = []
   ==================== """
 def first_pass( commands ):
     b = ""
+    f = 1
     for command in commands:
         if command[0] == "basename":
             b = command[1]
@@ -150,8 +151,9 @@ def run(filename):
     second_pass(vary,frames)
     cframe = 0
     while cframe < frames:
-        #print frames
+        print "Frame: " + str(cframe)
         for command in commands:
+            print command
             if command[0] == "pop":
                 stack.pop()
                 if not stack:

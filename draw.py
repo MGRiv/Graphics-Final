@@ -45,47 +45,70 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
     ry = p[2][1]
     rx = p[2][0]
     rz = p[2][2]
-    if ry < p[1][1]:
-        #BM
-        # dx/dy
+    
+
+    #BM
+    # dx/dy
+    try:
         tau1 = (p[1][0] - p[2][0]) / float(p[1][1] - p[2][1])
-        # dz/dy
+    except:
+        pass
+    # dz/dy
+    try:
         tau2 = (p[1][2] - p[2][2])/ float(p[1][1]- p[2][1])
-        #BT
-        # dx/dy
-        tau3 = (p[0][0] - p[2][0]) / float(p[0][1] - p[2][1])
-        # dz/dy
-        tau4 = (p[0][2] - p[2][2])/ float(p[0][1]- p[2][1])
-    if ry > p[1][1] and ry < p[0][1]:
-        #MT
-        # dx/dy
-        tau1 = (p[0][0] - p[1][0])/float(p[0][1]-p[1][1])
-        # dz/dy
-        tau2 = (p[0][2] - p[1][2])/float(p[0][1]-p[1][1])
-        #BT
-        # dx/dy
-        tau3 = (p[0][0] - p[2][0])/float(p[0][1] - p[2][1])
-        # dz/dy
-        tau4 = (p[0][2] - p[2][2])/float(p[0][1] - p[2][1])
+    except:
+        pass
 
+    #MT
+    # dx/dy
+    try:
+        tau3 = (p[0][0] - p[1][0])/float(p[0][1]-p[1][1])
+    except:
+        pass
+    # dz/dy
+    try:
+        tau4 = (p[0][2] - p[1][2])/float(p[0][1]-p[1][1])
+    except:
+        pass
 
+    #BT
+    # dx/dy
+    try:
+        tau5 = (p[0][0] - p[2][0]) / float(p[0][1] - p[2][1])
+    except:
+        pass
+    # dz/dy
+    try:
+        tau6 = (p[0][2] - p[2][2])/ float(p[0][1]- p[2][1])
+    except:
+        pass
+
+    if ry == p[1][1]:
+        if rx > p[1][0]:
+            rx = p[1][0]
+            ry = p[1][1]
+            rz = p[1][2]
+        else:
+            lx = p[1][0]
+            ly = p[1][1]
+            lz = p[1][2]
 
     while ry < p[1][1]:
         draw_line(screen, zb, int(lx), int(ly), int(lz), int(rx), int(ry), int(rz), color)
         ry += 1
         ly += 1
         rx += tau1
-        lx += tau3
+        lx += tau5
         rz += tau2
-        lz += tau4
-    while ry > p[1][1] and ry < p[0][1]:
+        lz += tau6
+    while ry < p[0][1]:
         draw_line(screen, zb, int(lx),int(ly), int(lz), int(rx),int(ry), int(rz), color)
         ry += 1
         ly += 1
-        rx -= tau1
-        lx += tau3
-        rz -= tau2
-        lz += tau4
+        rx += tau3
+        lx += tau5
+        rz += tau4
+        lz += tau6
         
              
              
