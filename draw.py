@@ -84,8 +84,8 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
     except:
         tau6 = 0
 
-    if ry == p[1][1]:
-        if rx > p[1][0]:
+    if abs(ry - p[1][1]) < 1:
+        if rx < p[1][0]:
             rx = p[1][0]
             ry = p[1][1]
             rz = p[1][2]
@@ -93,8 +93,19 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
             lx = p[1][0]
             ly = p[1][1]
             lz = p[1][2]
-            
-    while p[1][1] - ry > 1:
+            tmp = tau5
+            tau5 = tau3
+            tau3 = tmp
+            tmp = tau6
+            tau6 = tau4
+            tau4 = tmp
+    
+    print "Set:"
+    print [tau1,tau2,tau3,tau4,tau5,tau6]
+    print [(p[0][0],p[0][1],p[0][2]),(p[1][0],p[1][1],p[1][2]),(p[2][0],p[2][1],p[2][2])]
+    print color
+    print [(lx,ly,lz),(rx,ry,rz)]
+    while p[1][1] - ry >= 1:
         draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color)
         ry += 1
         ly += 1
@@ -102,7 +113,13 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
         lx += tau5
         rz += tau2
         lz += tau6
-    while p[0][1] - ry > 1:
+    print [(lx,ly,lz),(rx,ry,rz)]
+    if abs(p[2][1] - p[1][1]) > 1:
+        draw_line(screen, zb, lx, ly, lz, rx , ry , rz , color)
+        rx = p[1][0]
+        ry = p[1][1]
+        rz = p[1][2]
+    while p[0][1] - ry >= 1:
         draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color)
         ry += 1
         ly += 1
@@ -110,6 +127,7 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
         lx += tau5
         rz += tau4
         lz += tau6
+    print [(lx,ly,lz),(rx,ry,rz)]
         
              
              
