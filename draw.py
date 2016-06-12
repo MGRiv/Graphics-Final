@@ -53,36 +53,36 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
     try:
         tau1 = (p[1][0] - p[2][0]) / float(p[1][1] - p[2][1])
     except:
-        pass
+        tau1 = 0
     # dz/dy
     try:
         tau2 = (p[1][2] - p[2][2])/ float(p[1][1]- p[2][1])
     except:
-        pass
+        tau2 = 0
 
     #MT
     # dx/dy
     try:
         tau3 = (p[0][0] - p[1][0])/float(p[0][1]-p[1][1])
     except:
-        pass
+        tau3 = 0
     # dz/dy
     try:
         tau4 = (p[0][2] - p[1][2])/float(p[0][1]-p[1][1])
     except:
-        pass
+        tau4 = 0
 
     #BT
     # dx/dy
     try:
         tau5 = (p[0][0] - p[2][0]) / float(p[0][1] - p[2][1])
     except:
-        pass
+        tau5 = 0
     # dz/dy
     try:
         tau6 = (p[0][2] - p[2][2])/ float(p[0][1]- p[2][1])
     except:
-        pass
+        tau6 = 0
 
     if ry == p[1][1]:
         if rx > p[1][0]:
@@ -93,17 +93,17 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
             lx = p[1][0]
             ly = p[1][1]
             lz = p[1][2]
-
-    while ry < p[1][1]:
-        draw_line(screen, zb, int(lx), int(ly), int(lz), int(rx), int(ry), int(rz), color)
+            
+    while p[1][1] - ry > 1:
+        draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color)
         ry += 1
         ly += 1
         rx += tau1
         lx += tau5
         rz += tau2
         lz += tau6
-    while ry < p[0][1]:
-        draw_line(screen, zb, int(lx),int(ly), int(lz), int(rx),int(ry), int(rz), color)
+    while p[0][1] - ry > 1:
+        draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color)
         ry += 1
         ly += 1
         rx += tau3
@@ -380,16 +380,19 @@ def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
     if dx + dy < 0:
         dx = 0 - dx
         dy = 0 - dy
+        dz = 0 - dz
         tmp = x0
         x0 = x1
         x1 = tmp
         tmp = y0
         y0 = y1
         y1 = tmp
+        tmp = z0
+        z0 = z1
+        z1 = tmp
     if dx == 0 and dy == 0:
         z_max = max(z0, z1)
         plot(screen, zb, color, x0, y0, z_max)
-
     elif dx == 0:
         y = y0
         z = z0
