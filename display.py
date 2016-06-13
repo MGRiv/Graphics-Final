@@ -1,6 +1,7 @@
 from subprocess import Popen, PIPE
 from sys import maxint
 from os import remove
+import light
 
 #constants
 XRES = 500
@@ -30,16 +31,23 @@ def new_zb(width = XRES, height = YRES):
             zb[y].append( -maxint-1 )
     return zb
 
-def plot( screen, zb, color, args, x, y, z ):
+def plot( screen, zb, color, x, y, z , normal):
     x = int(x)
     y = int(y)
     newy = YRES - 1 - y
     if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES  and z > zb[x][newy]):
-        if type(color) is list:
+        if normal == None:
             screen[x][newy] = color[:]
+            zb[x][newy] = z
         else:
-            screen[x][newy] = color(args)
-        zb[x][newy] = z
+            #screen[x][newy] = color[:]
+            screen[x][newy] = light.color_light([
+                [[0.5,0.1,0.4],[0.5,0.1,0.4],[0.5,0.1,0.4]],
+                [[190,190],[190,190],[190,190]],
+                [0,0,-1],
+                normal,
+                [0,0,1]])
+            zb[x][newy] = z
 
 def clear_screen( screen ):
     for y in range( len(screen) ):
@@ -71,6 +79,3 @@ def display( screen ):
     ppm_name = 'pic.ppm'
     save_ppm( screen, ppm_name )
     Popen( ['display', ppm_name], stdin=PIPE, stdout = PIPE )
-
-
-def 

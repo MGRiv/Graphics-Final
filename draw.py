@@ -1,6 +1,6 @@
 from display import *
 from matrix import *
-from gmath import calculate_dot
+from gmath import calculate_dot, calculate_normal
 from math import cos, sin, pi
 from random import randint
 
@@ -21,16 +21,24 @@ def draw_polygons( points, screen, zb, color ):
     while p < len( points ) - 2:
 
         if calculate_dot( points, p ) < 0:
+            ax = points[p + 1][0] - points[ p ][0]
+            ay = points[p + 1][1] - points[ p ][1]
+            az = points[p + 1][2] - points[ p ][2]
+            
+            bx = points[p + 2][0] - points[ p ][0]
+            by = points[p + 2][1] - points[ p ][1]
+            bz = points[p + 2][2] - points[ p ][2]
+            normal = calculate_normal( ax, ay, az, bx, by, bz )
             draw_line( screen, zb, points[p][0], points[p][1], points[p][2],
-                       points[p+1][0], points[p+1][1], points[p+1][2], color )
+                       points[p+1][0], points[p+1][1], points[p+1][2], color, normal)
             draw_line( screen, zb, points[p+1][0], points[p+1][1], points[p+1][2],
-                       points[p+2][0], points[p+2][1], points[p+2][2], color )
+                       points[p+2][0], points[p+2][1], points[p+2][2], color, normal)
             draw_line( screen, zb, points[p+2][0], points[p+2][1], points[p+2][2],
-                       points[p][0], points[p][1], points[p][2], color )
-            calcscanline(screen, zb, points[p][0], points[p][1], points[p][2], points[p+1][0], points[p+1][1], points[p+1][2], points[p+2][0], points[p+2][1], points[p+2][2] , [randint(0,255),randint(0,255),randint(0,255)])
+                       points[p][0], points[p][1], points[p][2], color, normal)
+            calcscanline(screen, zb, points[p][0], points[p][1], points[p][2], points[p+1][0], points[p+1][1], points[p+1][2], points[p+2][0], points[p+2][1], points[p+2][2] , [randint(0,255),randint(0,255),randint(0,255)],normal)
         p+= 3
 
-def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
+def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color,normal):
     
     p=[[x0 ,y0, z0],[x1, y1, z1],[x2, y2, z2]]
     p.sort(key = lambda x: -x[1])
@@ -100,34 +108,34 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color):
             tau6 = tau4
             tau4 = tmp
     
-    print "Set:"
-    print [tau1,tau2,tau3,tau4,tau5,tau6]
-    print [(p[0][0],p[0][1],p[0][2]),(p[1][0],p[1][1],p[1][2]),(p[2][0],p[2][1],p[2][2])]
-    print color
-    print [(lx,ly,lz),(rx,ry,rz)]
+    #print "Set:"
+    #print [tau1,tau2,tau3,tau4,tau5,tau6]
+    #print [(p[0][0],p[0][1],p[0][2]),(p[1][0],p[1][1],p[1][2]),(p[2][0],p[2][1],p[2][2])]
+    #print color
+    #print [(lx,ly,lz),(rx,ry,rz)]
     while p[1][1] - ry >= 1:
-        draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color)
+        draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color,normal)
         ry += 1
         ly += 1
         rx += tau1
         lx += tau5
         rz += tau2
         lz += tau6
-    print [(lx,ly,lz),(rx,ry,rz)]
+    #print [(lx,ly,lz),(rx,ry,rz)]
     if abs(p[2][1] - p[1][1]) > 1:
-        draw_line(screen, zb, lx, ly, lz, rx , ry , rz , color)
+        draw_line(screen, zb, lx, ly, lz, rx , ry , rz , color,normal)
         rx = p[1][0]
         ry = p[1][1]
         rz = p[1][2]
     while p[0][1] - ry >= 1:
-        draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color)
+        draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color,normal)
         ry += 1
         ly += 1
         rx += tau3
         lx += tau5
         rz += tau4
         lz += tau6
-    print [(lx,ly,lz),(rx,ry,rz)]
+    #print [(lx,ly,lz),(rx,ry,rz)]
         
              
              
@@ -380,7 +388,7 @@ def draw_lines( matrix, screen, zb, color ):
     p = 0
     while p < len( matrix ) - 1:
         draw_line( screen,zb, matrix[p][0], matrix[p][1], matrix[p][2],
-                   matrix[p+1][0], matrix[p+1][1], matrix[p+1][2], color )
+                   matrix[p+1][0], matrix[p+1][1], matrix[p+1][2], color,None)
         p+= 2
 
 def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
@@ -391,7 +399,7 @@ def add_point( matrix, x, y, z=0 ):
     matrix.append( [x, y, z, 1] )
 
 
-def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
+def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color, normal):
     dx = x1 - x0
     dy = y1 - y0
     dz = z1 - z0
@@ -410,13 +418,13 @@ def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
         z1 = tmp
     if dx == 0 and dy == 0:
         z_max = max(z0, z1)
-        plot(screen, zb, color, x0, y0, z_max)
+        plot(screen, zb, color, x0, y0, z_max,normal)
     elif dx == 0:
         y = y0
         z = z0
         grad = dz / float(dy)
         while y <= y1:
-            plot(screen, zb, color,  x0, y, z)
+            plot(screen, zb, color,  x0, y, z,normal)
             y = y + 1
             z = z + grad
     elif dy == 0:
@@ -424,7 +432,7 @@ def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
         z = z0
         grad = dz / float(dx)
         while x <= x1:
-            plot(screen, zb, color, x, y0, z)
+            plot(screen, zb, color, x, y0, z,normal)
             x = x + 1
             z = z + grad
     elif dy < 0:
@@ -434,7 +442,7 @@ def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
         z = z0
         grad = dz / float(dy)
         while x <= x1:
-            plot(screen, zb, color, x, y,z)
+            plot(screen, zb, color, x, y,z,normal)
             if d > 0:
                 y = y - 1
                 d = d - dx
@@ -448,7 +456,7 @@ def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
         z = z0
         grad = dz / float(dy)
         while y <= y1:
-            plot(screen, zb, color, x, y, z)
+            plot(screen, zb, color, x, y, z,normal)
             if d > 0:
                 x = x - 1
                 d = d - dy
@@ -462,7 +470,7 @@ def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
         z = z0
         grad = dz / float(dy)
         while x <= x1:
-            plot(screen, zb, color, x, y,z)
+            plot(screen, zb, color, x, y,z,normal)
             if d > 0:
                 y = y + 1
                 d = d - dx
@@ -476,7 +484,7 @@ def draw_line( screen, zb, x0, y0, z0, x1, y1, z1, color ):
         z = z0
         grad = dz / float(dy)
         while y <= y1:
-            plot(screen, zb, color, x, y,z)
+            plot(screen, zb, color, x, y,z,normal)
             if d > 0:
                 x = x + 1
                 d = d - dy
