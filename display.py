@@ -35,7 +35,7 @@ def plot( screen, zb, color, x, y, z , normal):
     x = int(x)
     y = int(y)
     newy = YRES - 1 - y
-    if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES  and z > zb[x][newy]):
+    if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES  and z - zb[x][newy] > 0):
         if normal == None:
             screen[x][newy] = color[:]
             zb[x][newy] = z
@@ -43,7 +43,7 @@ def plot( screen, zb, color, x, y, z , normal):
             #screen[x][newy] = color[:]
             screen[x][newy] = light.color_light([
                 [[0.5,0.1,0.4],[0.5,0.1,0.4],[0.5,0.1,0.4]],
-                [[190,190],[190,190],[190,190]],
+                [[210,210],[40,40],[150,150]],
                 [0,0,-1],
                 normal,
                 [0,0,1]])

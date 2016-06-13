@@ -36,6 +36,7 @@ def draw_polygons( points, screen, zb, color ):
             draw_line( screen, zb, points[p+2][0], points[p+2][1], points[p+2][2],
                        points[p][0], points[p][1], points[p][2], color, normal)
             calcscanline(screen, zb, points[p][0], points[p][1], points[p][2], points[p+1][0], points[p+1][1], points[p+1][2], points[p+2][0], points[p+2][1], points[p+2][2] , [randint(0,255),randint(0,255),randint(0,255)],normal)
+            calcscanline2(screen, zb, points[p][0], points[p][1], points[p][2], points[p+1][0], points[p+1][1], points[p+1][2], points[p+2][0], points[p+2][1], points[p+2][2] , [randint(0,255),randint(0,255),randint(0,255)],normal)
         p+= 3
 
 def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color,normal):
@@ -113,6 +114,10 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color,normal):
     #print [(p[0][0],p[0][1],p[0][2]),(p[1][0],p[1][1],p[1][2]),(p[2][0],p[2][1],p[2][2])]
     #print color
     #print [(lx,ly,lz),(rx,ry,rz)]
+    if abs(p[2][1] - p[1][1]) > 1:
+        draw_line(screen, zb, lx - tau5, ly - 1, lz - tau6, rx - tau1, ry - 1, rz - tau2, color,normal)
+    else:
+        draw_line(screen, zb, lx - tau5, ly - 1, lz - tau6, rx - tau3, ry - 1, rz - tau4, color,normal)
     while p[1][1] - ry >= 1:
         draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color,normal)
         ry += 1
@@ -122,11 +127,11 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color,normal):
         rz += tau2
         lz += tau6
     #print [(lx,ly,lz),(rx,ry,rz)]
+    draw_line(screen, zb, lx, ly, lz, rx , ry , rz , color,normal)
     if abs(p[2][1] - p[1][1]) > 1:
-        draw_line(screen, zb, lx, ly, lz, rx , ry , rz , color,normal)
         rx = p[1][0]
         ry = p[1][1]
-        rz = p[1][2]
+        rz = p[1][2]        
     while p[0][1] - ry >= 1:
         draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color,normal)
         ry += 1
@@ -134,10 +139,108 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color,normal):
         rx += tau3
         lx += tau5
         rz += tau4
-        lz += tau6
-    #print [(lx,ly,lz),(rx,ry,rz)]
+        lz += tau6    
         
-             
+
+def calcscanline2(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color,normal):
+    
+    p=[[x0 ,y0, z0],[x1, y1, z1],[x2, y2, z2]]
+    p.sort(key = lambda x: x[1])
+    '''
+    p[2] is T
+    p[1] is M
+    p[0] is B
+    '''
+
+    ly = p[2][1]
+    lx = p[2][0]
+    lz = p[2][2]
+    ry = p[2][1]
+    rx = p[2][0]
+    rz = p[2][2]
+    
+
+    #TM
+    # dx/dy
+    try:
+        tau1 = (p[1][0] - p[2][0]) / float(p[1][1] - p[2][1])
+    except:
+        tau1 = 0
+    # dz/dy
+    try:
+        tau2 = (p[1][2] - p[2][2])/ float(p[1][1]- p[2][1])
+    except:
+        tau2 = 0
+
+    #MB
+    # dx/dy
+    try:
+        tau3 = (p[0][0] - p[1][0])/float(p[0][1]-p[1][1])
+    except:
+        tau3 = 0
+    # dz/dy
+    try:
+        tau4 = (p[0][2] - p[1][2])/float(p[0][1]-p[1][1])
+    except:
+        tau4 = 0
+
+    #TB
+    # dx/dy
+    try:
+        tau5 = (p[0][0] - p[2][0]) / float(p[0][1] - p[2][1])
+    except:
+        tau5 = 0
+    # dz/dy
+    try:
+        tau6 = (p[0][2] - p[2][2])/ float(p[0][1]- p[2][1])
+    except:
+        tau6 = 0
+
+    if abs(ry - p[1][1]) < 1:
+        if rx < p[1][0]:
+            rx = p[1][0]
+            ry = p[1][1]
+            rz = p[1][2]
+        else:
+            lx = p[1][0]
+            ly = p[1][1]
+            lz = p[1][2]
+            tmp = tau5
+            tau5 = tau3
+            tau3 = tmp
+            tmp = tau6
+            tau6 = tau4
+            tau4 = tmp
+    
+    #print "Set:"
+    #print [tau1,tau2,tau3,tau4,tau5,tau6]
+    #print [(p[0][0],p[0][1],p[0][2]),(p[1][0],p[1][1],p[1][2]),(p[2][0],p[2][1],p[2][2])]
+    #print color
+    #print [(lx,ly,lz),(rx,ry,rz)]
+    while ry - p[1][1] > 1:
+        draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color,normal)
+        ry -= 1
+        ly -= 1
+        rx -= tau1
+        lx -= tau5
+        rz -= tau2
+        lz -= tau6
+    #print [(lx,ly,lz),(rx,ry,rz)]
+    draw_line(screen, zb, lx, ly, lz, rx , ry , rz , color,normal)
+    #if abs(p[2][1] - p[1][1]) > 1:
+    #    lx = p[1][0]
+    #    ly = p[1][1]
+    #    lz = p[1][2]
+    while ry - p[0][1] > 1:
+        draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color,normal)
+        ry -= 1
+        ly -= 1
+        rx -= tau3
+        lx -= tau5
+        rz -= tau4
+        lz -= tau6
+
+
              
 def add_box( points, x, y, z, width, height, depth ):
     x1 = x + width
