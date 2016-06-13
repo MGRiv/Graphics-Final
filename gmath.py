@@ -1,3 +1,4 @@
+import math
 def calculate_normal( ax, ay, az, bx, by, bz ):
     normal = [0,0,0]
     normal[0] = ay * bz - az * by
@@ -23,6 +24,23 @@ def calculate_dot( points, i ):
     vz = -1
     
     #calculate the dot product
-    dot = normal[0] * vx + normal[1] * vy + normal[2] * vz
+
     
-    return dot
+    return dot([vx, vy, vz], normal)
+
+def dot(v1, v2):
+    return sum([i * j for (i,j) in zip(v1, v2)])
+
+
+def norm(v):
+    return math.sqrt(sum([i**2 for i in v]))
+
+def normalize(v):
+    length = float(norm(v))
+    return [i/length for i in v]
+
+def scalar_multiply(vec, c):
+    return [i * c for i in vec]
+
+def sub(v1, v2):
+    return [i - j for (i, j) in zip(v1, v2)]
