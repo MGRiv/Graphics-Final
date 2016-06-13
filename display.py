@@ -30,12 +30,15 @@ def new_zb(width = XRES, height = YRES):
             zb[y].append( -maxint-1 )
     return zb
 
-def plot( screen, zb, color, x, y, z ):
+def plot( screen, zb, color, args, x, y, z ):
     x = int(x)
     y = int(y)
     newy = YRES - 1 - y
     if ( x >= 0 and x < XRES and newy >= 0 and newy < YRES  and z > zb[x][newy]):
-        screen[x][newy] = color[:]
+        if type(color) is list:
+            screen[x][newy] = color[:]
+        else:
+            screen[x][newy] = color(args)
         zb[x][newy] = z
 
 def clear_screen( screen ):
@@ -70,3 +73,4 @@ def display( screen ):
     Popen( ['display', ppm_name], stdin=PIPE, stdout = PIPE )
 
 
+def 
