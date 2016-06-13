@@ -47,7 +47,7 @@ def color_light(args):
     r = light(K[0], C[0], L, N, V)
     g = light(K[1], C[1], L, N, V)
     b = light(K[2], C[2], L, N, V)
-    print [r,g,b]
+    #print [r,g,b]
     return [r, g, b]
 '''
 args = [k, c, L, N, V]

@@ -151,9 +151,9 @@ def run(filename):
     second_pass(vary,frames)
     cframe = 0
     while cframe < frames:
-        print "Frame: " + str(cframe)
+        print "Generating Frame: " + str(cframe)
         for command in commands:
-            print command
+            #print command
             if command[0] == "pop":
                 stack.pop()
                 if not stack:
