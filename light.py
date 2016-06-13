@@ -21,14 +21,30 @@ def light(k, c, L, N, V):
     if sum(k) - 1 != 0:
         print "Error, k values must add up to 1"
     return ambient(c[0], k[0]) + diffuse(c[1], k[1], L, N) + specular(c[1], k[2], L, N, V)
-
-def color_light(K, C, L, N, V):
+'''
+args = [K, C, L, N, V]
+'''
+def color_light(args):
+    args[0] = K
+    args[1] = C
+    args[2]= L
+    args[3]= N
+    args[4] = V
 # K = [k_r, k_g, k_b]
 # K stores k values for red green and blue
+# k_r = [k_a, k_d, k_s]
 # C = [c_r, c_g, c_b]
 # c_r = [c_a, c_p]
 # C stores c values for red green and blue
     return [light(K[0], C[0], L, N, V), light(K[1], C[1], L, N, V), light(K[2], C[2], L, N, V)]
-
-def monochrome_light(k, c, L, N, V):
+'''
+args = [k, c, L, N, V]
+'''
+def monochrome_light():
+    args[0] = k
+    args[1] = c
+    args[2] = L
+    args[3] = N
+    args[4] = V
     return [light(k, c, L, N, V) for i in range(2)]
+
