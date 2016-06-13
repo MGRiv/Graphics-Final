@@ -128,10 +128,10 @@ def calcscanline(screen,zb,x0,y0,z0,x1,y1,z1,x2,y2,z2,color,normal):
         lz += tau6
     #print [(lx,ly,lz),(rx,ry,rz)]
     draw_line(screen, zb, lx, ly, lz, rx , ry , rz , color,normal)
-    if abs(p[2][1] - p[1][1]) > 1:
-        rx = p[1][0]
-        ry = p[1][1]
-        rz = p[1][2]        
+    #if abs(p[2][1] - p[1][1]) > 1:
+    #    rx = p[1][0]
+    #    ry = p[1][1]
+    #    rz = p[1][2]      
     while p[0][1] - ry >= 1:
         draw_line(screen, zb, lx, ly, lz, rx, ry, rz, color,normal)
         ry += 1
